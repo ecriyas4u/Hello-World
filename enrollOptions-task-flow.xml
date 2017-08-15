@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<adfc-mobile-config xmlns="http://xmlns.oracle.com/adf/controller"
+                    version="1.0">
+  <task-flow-definition id="enrollOptions-task-flow">
+    <default-activity>onActive</default-activity>
+    <managed-bean id="__1">
+      <managed-bean-name>enrlOptnsBean</managed-bean-name>
+      <managed-bean-class>oracle.cs.cm.view.enrollOptions.EnrollOptionsBean</managed-bean-class>
+      <managed-bean-scope>pageFlow</managed-bean-scope>
+    </managed-bean>
+    <view id="enrollOptions">
+      <page>oracle.cs.cm.view.enrollOptions/pages/enrollOptions.amx</page>
+    </view>
+    <view id="lov-select">
+      <page>oracle.cs.cm.view.enrollOptions/pages/lov-select.amx</page>
+    </view>
+    <view id="units">
+      <page>oracle.cs.cm.view.enrollOptions/pages/units.amx</page>
+    </view>
+    <router id="redirect">
+      <case id="__23">
+        <expression>#{pageFlowScope.isAlreadyEnrolledError eq 'true'}</expression>
+        <outcome>returnError</outcome>
+      </case>
+      <case id="__5">
+        <expression>#{pageFlowScope.isEnrollblClass eq 'true' &amp;&amp; pageFlowScope.hasRelatedClasses eq 'true'}</expression>
+        <outcome>gotoRelatedClasses</outcome>
+      </case>
+      <case id="__6">
+        <expression>#{pageFlowScope.isEnrollblClass ne 'true'}</expression>
+        <outcome>gotoEnrollSec</outcome>
+      </case>
+      <default-outcome>gotoEnrollOptions</default-outcome>
+    </router>
+    <view id="relatedClsSecs">
+      <page>/oracle.cs.cm.view.enrollOptions/pages/relatedClsSecs.amx</page>
+    </view>
+    <view id="enrollmentSecs">
+      <page>/oracle.cs.cm.view.enrollOptions/pages/enrollmentSecs.amx</page>
+    </view>
+    <router id="checkRelated_1">
+      <case id="__11">
+        <expression>#{pageFlowScope.renderRelatedClasses1 eq 'Y' || pageFlowScope.renderAutoEnrlClasses eq 'Y'}</expression>
+        <outcome>gotoRelatedClasses</outcome>
+      </case>
+      <default-outcome>gotoEnrollOptions</default-outcome>
+    </router>
+    <method-call id="onActive">
+      <method>#{bindings.onActive.execute}</method>
+      <outcome>
+        <fixed-outcome>onActive</fixed-outcome>
+      </outcome>
+    </method-call>
+    <task-flow-return id="backToSectionDetails">
+      <outcome>
+        <name>backToSectionDetails</name>
+      </outcome>
+    </task-flow-return>
+    <task-flow-return id="backError">
+      <outcome>
+        <name>backError</name>
+      </outcome>
+    </task-flow-return>
+    <task-flow-return id="cartStart">
+      <outcome>
+        <name>cartStart</name>
+      </outcome>
+    </task-flow-return>
+    <control-flow-rule id="__2">
+      <from-activity-id>enrollOptions</from-activity-id>
+      <control-flow-case id="__3">
+        <from-outcome>showUnits</from-outcome>
+        <to-activity-id>units</to-activity-id>
+      </control-flow-case>
+      <control-flow-case id="__4">
+        <from-outcome>selectLov</from-outcome>
+        <to-activity-id>lov-select</to-activity-id>
+      </control-flow-case>
+      <control-flow-case id="__15">
+        <from-outcome>cartStart</from-outcome>
+        <to-activity-id>cartStart</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+    <control-flow-rule id="__7">
+      <from-activity-id>redirect</from-activity-id>
+      <control-flow-case id="__8">
+        <from-outcome>gotoEnrollOptions</from-outcome>
+        <to-activity-id>enrollOptions</to-activity-id>
+      </control-flow-case>
+      <control-flow-case id="__9">
+        <from-outcome>gotoRelatedClasses</from-outcome>
+        <to-activity-id>relatedClsSecs</to-activity-id>
+      </control-flow-case>
+      <control-flow-case id="__10">
+        <from-outcome>gotoEnrollSec</from-outcome>
+        <to-activity-id>enrollmentSecs</to-activity-id>
+      </control-flow-case>
+      <control-flow-case id="__18">
+        <from-outcome>returnError</from-outcome>
+        <to-activity-id>backError</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+    <control-flow-rule id="__13">
+      <from-activity-id>relatedClsSecs</from-activity-id>
+      <control-flow-case id="__14">
+        <from-outcome>gotoEnrollOptions</from-outcome>
+        <to-activity-id>enrollOptions</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+    <control-flow-rule id="__20">
+      <from-activity-id>checkRelated_1</from-activity-id>
+      <control-flow-case id="__21">
+        <from-outcome>gotoEnrollOptions</from-outcome>
+        <to-activity-id>enrollOptions</to-activity-id>
+      </control-flow-case>
+      <control-flow-case id="__33">
+        <from-outcome>gotoRelatedClasses</from-outcome>
+        <to-activity-id>relatedClsSecs</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+    <control-flow-rule id="__36">
+      <from-activity-id>enrollmentSecs</from-activity-id>
+      <control-flow-case id="__37">
+        <from-outcome>checkRelatedCls</from-outcome>
+        <to-activity-id>checkRelated_1</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+    <control-flow-rule id="__38">
+      <from-activity-id>onActive</from-activity-id>
+      <control-flow-case id="__12">
+        <from-outcome>onActive</from-outcome>
+        <to-activity-id>redirect</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+    <control-flow-rule id="__16">
+      <from-activity-id>*</from-activity-id>
+      <control-flow-case id="__17">
+        <from-outcome>returnTF</from-outcome>
+        <to-activity-id>backToSectionDetails</to-activity-id>
+      </control-flow-case>
+    </control-flow-rule>
+  </task-flow-definition>
+</adfc-mobile-config>
